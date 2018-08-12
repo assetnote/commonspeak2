@@ -72,9 +72,11 @@ func CmdStatus(c *cli.Context) error {
 		"Limit":      limitArg,
 		"Extensions": extensions,
 	}
-
-	log.WithFields(fields).Infof("Compiled SQL Template: %s", compiledSql)
 	
+	if verboseOpt {
+		log.WithFields(fields).Infof("Compiled SQL Template: %s", compiledSql)
+	}
+
 	ctx := context.Background()
 
 	client, err := bigquery.NewClient(ctx, project, option.WithCredentialsFile(credentials))
