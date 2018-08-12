@@ -1,3 +1,9 @@
 package: .
 import:
   - package: "github.com/urfave/cli"
+  - package: "github.com/valyala/fasttemplate"
+  - package: "github.com/go-bindata/go-bindata"
+  - package: "github.com/sirupsen/logrus"
+  - package: "cloud.google.com/go/bigquery"
+  - package: "google.golang.org/api/iterator"
+  - package: "google.golang.org/api/option"

@@ -1,2 +1,4 @@
+.DS_Store
 vendor/**
 glide.lock
+credentials.json
