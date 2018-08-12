@@ -37,6 +37,9 @@ func CmdStatus(c *cli.Context) error {
 	frameworks := c.String("frameworks")
 	outputFile := c.String("output")
 
+	// TODO: Create route based extraction functionality
+	log.Fatal("Feature to be implemented...")
+
 	if _, err := os.Stat(credentials); os.IsNotExist(err) {
 		log.Fatalln(`credentials file not found, either have credentials.json saved in this folder, or provide the
 						the credentials file path via the --credentials parameter.`)
@@ -51,7 +54,7 @@ func CmdStatus(c *cli.Context) error {
 	}
 	
 	fields := log.Fields{
-		"Mode":       "Subdomains",
+		"Mode":       "Routes",
 	}
 
 	// Store generated templates in a string slice, if no
@@ -62,7 +65,7 @@ func CmdStatus(c *cli.Context) error {
 	for _, fw := range frameworkList {
 		switch fw {
 		case "rails":
-			RailsSqlAsset, err := assets.Asset("sql/github/rails_routes.sql")
+			RailsSqlAsset, err := assets.Asset("sql/github/rails-routes.sql")
 			if err != nil {
 				log.Debug("SQL for Rails not found.")
 			}
@@ -77,7 +80,7 @@ func CmdStatus(c *cli.Context) error {
 			SQLTemplateStrings["rails"] = RailsCompiledSql
 			log.WithFields(fields).Info("Generated SQL template for Rails routes.")
 		case "nodejs":
-			NodeSqlAsset, err := assets.Asset("sql/github/nodejs_routes.sql")
+			NodeSqlAsset, err := assets.Asset("sql/github/nodejs-routes.sql")
 			if err != nil {
 				log.Debug("SQL for NodeJS not found.")
 			}
@@ -92,7 +95,7 @@ func CmdStatus(c *cli.Context) error {
 			SQLTemplateStrings["nodejs"] = NodeCompiledSql
 			log.WithFields(fields).Info("Generated SQL template for NodeJS routes.")
 		case "tomcat":
-			TomcatSqlAsset, err := assets.Asset("sql/github/tomcat_routes.sql")
+			TomcatSqlAsset, err := assets.Asset("sql/github/tomcat-routes.sql")
 			if err != nil {
 				log.Debug("SQL for Tomcat not found.")
 			}
