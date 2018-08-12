@@ -87,10 +87,8 @@ Generate smart substitutions and alterations for the datasets that it makes sens
 Credits
 ----
 
-[Assetnote Pty. Ltd.](https://assetnote.io/)
-
-Assetnote [@assetnote](https://twitter.com/assetnote)
 Shubham Shah [@infosec_au](https://twitter.com/infosec_au)
+
 Michael Gianarakis [@mgianarakis](https://twitter.com/mgianarakis)
 
 License
@@ -111,3 +109,5 @@ License
    See the License for the specific language governing permissions and
    limitations under the License.
 ```
+
+[Assetnote Pty. Ltd.](https://assetnote.io/) - Twitter [@assetnote](https://twitter.com/assetnote)
