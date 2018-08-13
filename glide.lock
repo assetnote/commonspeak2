@@ -1,5 +1,5 @@
-hash: 1fe8e9a7cb43caa5858240eb059d53ad6b2b17281531691ba008bd4e84788712
-updated: 2018-07-19T20:38:26.521693583+10:00
+hash: 07b9d471890321eed015f70d2a87828dd054c50b3ccec7a66cabffa91ccbfc61
+updated: 2018-08-13T20:18:37.157138171+10:00
 imports:
 - name: cloud.google.com/go
   version: c23afc06f11560eb1e93425b849aee2581c6dcfa
@@ -13,6 +13,8 @@ imports:
   - internal/optional
   - internal/trace
   - internal/version
+- name: github.com/corpix/uarand
+  version: 2b8494104d86337cdd41d0a49cbed8e4583c0ab4
 - name: github.com/go-bindata/go-bindata
   version: d266f3a456685e7541abc9f010d46fff146c7858
 - name: github.com/golang/protobuf
@@ -25,6 +27,8 @@ imports:
   - ptypes/timestamp
 - name: github.com/googleapis/gax-go
   version: 1ef592c90f479e3ab30c6c2312e20e13881b7ea6
+- name: github.com/icrowley/fake
+  version: 4178557ae428460c3780a381c824a1f3aceb6325
 - name: github.com/sirupsen/logrus
   version: e54a77765aca7bbdd8e56c1c54f60579968b2dc9
 - name: github.com/urfave/cli

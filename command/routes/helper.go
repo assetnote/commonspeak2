@@ -17,7 +17,9 @@
 package routes
 
 import (
+	"github.com/assetnote/commonspeak2/assets"
 	"github.com/assetnote/commonspeak2/log"
+	"github.com/icrowley/fake"
 	"cloud.google.com/go/bigquery"
 	"google.golang.org/api/iterator"
 	"golang.org/x/net/context"
@@ -32,17 +34,41 @@ func query(client *bigquery.Client, ctx context.Context, compiledSql string) (*b
 	return query.Read(ctx)
 }
 
-func cleanPathData(route string, framework string) string {
+
+// readLines reads a whole file into memory
+// and returns a slice of its lines.
+func readLines(path string) ([]string, error) {
+  file, err := assets.Asset(path)
+  if err != nil {
+	return nil, err
+  }
+  filterString := string(file[:])
+  lines := strings.Split(filterString, "\n")
+  return lines, nil
+}
+
+
+
+func cleanPathData(route string, framework string, numericalFilter []string, stringFilter []string) string {
 	switch framework {
 	case "rails":
-		rails_replacer := strings.NewReplacer(
+		// initial clean up
+		railsCleaner := strings.NewReplacer(
 					      "'", "",
 					      "\"", "",
 					      "(", "",
 					      ")", "",
 					      "*", ":",
 		   			    )
-		route = rails_replacer.Replace(route)
+		route = railsCleaner.Replace(route)
+		// numerical replacements
+		numericalReplacer := strings.NewReplacer(numericalFilter...)
+		// make numerical replacements (random number 5 digits)
+		route = numericalReplacer.Replace(route)
+		// string replacements
+		stringReplacer := strings.NewReplacer(stringFilter...)
+		// make string replacements (random word lorem ipsum)
+		route = stringReplacer.Replace(route) 
 	}
 	return route
 }
@@ -54,6 +80,53 @@ func handleResults(w io.Writer, iter *bigquery.RowIterator, outputFile string, f
 		"Framework":  framework,
 		"Source":     "Github",
 	}
+
+	// obtain numerical parameter filters
+	numericalParameters, err := readLines("data/filters/numerical-parameters.txt")
+	if err != nil {
+		log.WithFields(fields).Debugf("Numerical parameters not found: %s", err.Error())
+	}
+	
+	// obtain string parameter filters
+	stringParameters, stringErr := readLines("data/filters/string-parameters.txt")
+	if stringErr != nil {
+		log.WithFields(fields).Debugf("String parameters not found: %s", stringErr.Error())
+	}
+	
+	numericalFilter := []string{}
+	stringFilter := []string{}
+
+	for _, parameter := range numericalParameters {
+		fmt.Println(parameter)
+		switch framework {
+		case "rails":
+			railsParam := fmt.Sprintf(":%s", parameter)
+			railsNumerical := fake.Digits()
+			numericalFilter = append(numericalFilter, railsParam, railsNumerical)
+		case "nodejs":
+			continue
+		case "tomcat":
+			continue
+		}
+	}
+
+	for _, parameter := range stringParameters {
+		fmt.Println(parameter)
+		switch framework {
+		case "rails":
+			railsParam := fmt.Sprintf(":%s", parameter)
+			railsString := fake.Word()
+			stringFilter = append(stringFilter, railsParam, railsString)
+		case "nodejs":
+			continue
+		case "tomcat":
+			continue
+		}
+	}
+
+	// fmt.Printf("%v",numericalFilter)
+	// fmt.Printf("%v",stringFilter)
+
 	file, err := os.Create(outputFile)
     if err != nil {
     	fields["Filename"] = outputFile
@@ -75,7 +148,7 @@ func handleResults(w io.Writer, iter *bigquery.RowIterator, outputFile string, f
 			return err
 		}
 
-		parsedRoute := cleanPathData(row.Route.String(), framework)
+		parsedRoute := cleanPathData(row.Route.String(), framework, numericalFilter, stringFilter)
 
 		// Save to output file
 		fmt.Fprintf(file, "%s\n", parsedRoute)

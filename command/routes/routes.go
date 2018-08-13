@@ -76,7 +76,7 @@ func CmdStatus(c *cli.Context) error {
 	// Store generated templates in a string slice, if no
 	// source parameter is provided, the default is to
 	// run all sources available in the below switch statement
-	SQLTemplateStrings := make(map[string]string)
+	sqlTemplateStrings := make(map[string]string)
 	frameworkList := strings.Split(frameworks, ",")
 	for _, fw := range frameworkList {
 		switch fw {
@@ -93,7 +93,7 @@ func CmdStatus(c *cli.Context) error {
 			if verboseOpt {
 				log.WithFields(fields).Infof("Compiled SQL Template: %s", RailsCompiledSql)
 			}
-			SQLTemplateStrings["rails"] = RailsCompiledSql
+			sqlTemplateStrings["rails"] = RailsCompiledSql
 			log.WithFields(fields).Info("Generated SQL template for Rails routes.")
 		case "nodejs":
 			NodeSqlAsset, err := assets.Asset(NodeSqlAssetPath)
@@ -108,7 +108,7 @@ func CmdStatus(c *cli.Context) error {
 			if verboseOpt {
 				log.WithFields(fields).Infof("Compiled SQL Template: %s", NodeCompiledSql)
 			}
-			SQLTemplateStrings["nodejs"] = NodeCompiledSql
+			sqlTemplateStrings["nodejs"] = NodeCompiledSql
 			log.WithFields(fields).Info("Generated SQL template for NodeJS routes.")
 		case "tomcat":
 			TomcatSqlAsset, err := assets.Asset(TomcatSqlAssetPath)
@@ -123,7 +123,7 @@ func CmdStatus(c *cli.Context) error {
 			if verboseOpt {
 				log.WithFields(fields).Infof("Compiled SQL Template: %s", TomcatCompiledSql)
 			}
-			SQLTemplateStrings["tomcat"] = TomcatCompiledSql
+			sqlTemplateStrings["tomcat"] = TomcatCompiledSql
 			log.WithFields(fields).Info("Generated SQL template for Tomcat routes.")
 		}
 	}
@@ -136,7 +136,7 @@ func CmdStatus(c *cli.Context) error {
 	}
 
 	// Iterate over generated templates and obtain results
-	for framework, compiledSqlValue := range SQLTemplateStrings {
+	for framework, compiledSqlValue := range sqlTemplateStrings {
 		fields["Framework"] = framework
 		log.WithFields(fields).Info("Executing BigQuery SQL... this could take some time.")
 		rows, err := query(client, ctx, compiledSqlValue)

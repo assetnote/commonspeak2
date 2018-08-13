@@ -7,3 +7,4 @@ import:
   - package: "cloud.google.com/go/bigquery"
   - package: "google.golang.org/api/iterator"
   - package: "google.golang.org/api/option"
+  - package: "github.com/icrowley/fake"
