@@ -6,9 +6,7 @@ jobs:
     steps:
       - checkout
       - run: go get -u -v -t github.com/Masterminds/glide
-      - run: go get -u github.com/go-bindata/go-bindata/...
       - run: glide install -v
-      - run: go-bindata -pkg assets -o assets/assets.go data/...
       - run: curl -sL https://git.io/goreleaser | bash
 workflows:
   version: 2
