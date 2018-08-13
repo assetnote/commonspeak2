@@ -62,7 +62,7 @@ func CmdStatus(c *cli.Context) error {
 	for _, s := range sourceList {
 		switch s {
 		case "hackernews":
-			HNSubdomainsSqlAsset, err := assets.Asset("sql/hackernews/subdomains.sql")
+			HNSubdomainsSqlAsset, err := assets.Asset("data/sql/hackernews/subdomains.sql")
 			if err != nil {
 				log.Debug("SQL for HackerNews not found.")
 			}
@@ -79,7 +79,7 @@ func CmdStatus(c *cli.Context) error {
 			SQLTemplateStrings["hackernews"] = HNCompiledSql
 			log.WithFields(fields).Info("Generated SQL template for HackerNews.")
 		case "httparchive":
-			HASubdomainsSqlAsset, err := assets.Asset("sql/http-archive/subdomains.sql")
+			HASubdomainsSqlAsset, err := assets.Asset("data/sql/http-archive/subdomains.sql")
 			if err != nil {
 				log.Debug("SQL for HTTPArchive not found.")
 			}

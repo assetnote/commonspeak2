@@ -55,7 +55,7 @@ func CmdStatus(c *cli.Context) error {
 
 	extensionsRegex := convertExtensionsToRegex(extensions)
 	
-	wordsSqlAsset, err := assets.Asset("sql/github/words-with-ext.sql")
+	wordsSqlAsset, err := assets.Asset("data/sql/github/words-with-ext.sql")
 	if err != nil {
 		// Asset was not found.
 	}

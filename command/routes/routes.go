@@ -29,8 +29,14 @@ import (
 )
 
 func CmdStatus(c *cli.Context) error {
+	// Constant asset paths
+	RailsSqlAssetPath := "data/sql/github/rails-routes.sql"
+	NodeSqlAssetPath := "data/sql/github/nodejs-routes.sql"
+	TomcatSqlAssetPath := "data/sql/github/tomcat-routes.sql"
+
 	verboseOpt := c.GlobalBool("verbose")
 	silentOpt := c.GlobalBool("silent")
+	testOpt := c.GlobalBool("test")
 	project := c.GlobalString("project")
 	credentials := c.GlobalString("credentials")
 	limitArg := c.String("limit")
@@ -38,7 +44,7 @@ func CmdStatus(c *cli.Context) error {
 	outputFile := c.String("output")
 
 	// TODO: Create route based extraction functionality
-	log.Fatal("Feature to be implemented...")
+	// log.Fatal("Feature to be implemented...")
 
 	if _, err := os.Stat(credentials); os.IsNotExist(err) {
 		log.Fatalln(`credentials file not found, either have credentials.json saved in this folder, or provide the
@@ -57,6 +63,16 @@ func CmdStatus(c *cli.Context) error {
 		"Mode":       "Routes",
 	}
 
+	// If test mode is enabled, let's use the testing SQL queries
+	// testing SQL queries use `sample_contents` or smaller datasets.
+	// This is to avoid breaking the bank!
+	if testOpt {
+		RailsSqlAssetPath = "data/sql/github/rails-routes-test.sql"
+		NodeSqlAssetPath = "data/sql/github/nodejs-routes-test.sql"
+		TomcatSqlAssetPath = "data/sql/github/tomcat-routes-test.sql"
+		log.WithFields(fields).Info("Running in test mode.")
+	}
+
 	// Store generated templates in a string slice, if no
 	// source parameter is provided, the default is to
 	// run all sources available in the below switch statement
@@ -65,7 +81,7 @@ func CmdStatus(c *cli.Context) error {
 	for _, fw := range frameworkList {
 		switch fw {
 		case "rails":
-			RailsSqlAsset, err := assets.Asset("sql/github/rails-routes.sql")
+			RailsSqlAsset, err := assets.Asset(RailsSqlAssetPath)
 			if err != nil {
 				log.Debug("SQL for Rails not found.")
 			}
@@ -80,7 +96,7 @@ func CmdStatus(c *cli.Context) error {
 			SQLTemplateStrings["rails"] = RailsCompiledSql
 			log.WithFields(fields).Info("Generated SQL template for Rails routes.")
 		case "nodejs":
-			NodeSqlAsset, err := assets.Asset("sql/github/nodejs-routes.sql")
+			NodeSqlAsset, err := assets.Asset(NodeSqlAssetPath)
 			if err != nil {
 				log.Debug("SQL for NodeJS not found.")
 			}
@@ -95,7 +111,7 @@ func CmdStatus(c *cli.Context) error {
 			SQLTemplateStrings["nodejs"] = NodeCompiledSql
 			log.WithFields(fields).Info("Generated SQL template for NodeJS routes.")
 		case "tomcat":
-			TomcatSqlAsset, err := assets.Asset("sql/github/tomcat-routes.sql")
+			TomcatSqlAsset, err := assets.Asset(TomcatSqlAssetPath)
 			if err != nil {
 				log.Debug("SQL for Tomcat not found.")
 			}

@@ -24,11 +24,27 @@ import (
 	"io"
 	"os"
 	"fmt"
+	"strings"
 )
 
 func query(client *bigquery.Client, ctx context.Context, compiledSql string) (*bigquery.RowIterator, error) {
 	query := client.Query(compiledSql)
 	return query.Read(ctx)
+}
+
+func cleanPathData(route string, framework string) string {
+	switch framework {
+	case "rails":
+		rails_replacer := strings.NewReplacer(
+					      "'", "",
+					      "\"", "",
+					      "(", "",
+					      ")", "",
+					      "*", ":",
+		   			    )
+		route = rails_replacer.Replace(route)
+	}
+	return route
 }
 
 
@@ -58,11 +74,14 @@ func handleResults(w io.Writer, iter *bigquery.RowIterator, outputFile string, f
 		if err != nil {
 			return err
 		}
+
+		parsedRoute := cleanPathData(row.Route.String(), framework)
+
 		// Save to output file
-		fmt.Fprintf(file, "%s\n", row.Route)
+		fmt.Fprintf(file, "%s\n", parsedRoute)
 		// Print to console if verbose mode is on
 		if verbose {
-			fmt.Fprintf(w, "Route: %s Count: %s\n", row.Route, row.RouteCount.String())
+			fmt.Fprintf(w, "Route: %s Count: %s\n", parsedRoute, row.RouteCount.String())
 		}
 		totalRows++
 	}
