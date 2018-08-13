@@ -27,6 +27,7 @@ import (
 	"os"
 	"fmt"
 	"strings"
+	"regexp"
 )
 
 func query(client *bigquery.Client, ctx context.Context, compiledSql string) (*bigquery.RowIterator, error) {
@@ -52,7 +53,7 @@ func readLines(path string) ([]string, error) {
 func cleanPathData(route string, framework string, numericalFilter []string, stringFilter []string) string {
 	switch framework {
 	case "rails":
-		// initial clean up
+		// Initial route clean up
 		railsCleaner := strings.NewReplacer(
 					      "'", "",
 					      "\"", "",
@@ -61,15 +62,22 @@ func cleanPathData(route string, framework string, numericalFilter []string, str
 					      "*", ":",
 		   			    )
 		route = railsCleaner.Replace(route)
-		// numerical replacements
+		// Make numerical replacements (random number 5 digits)
 		numericalReplacer := strings.NewReplacer(numericalFilter...)
-		// make numerical replacements (random number 5 digits)
 		route = numericalReplacer.Replace(route)
-		// string replacements
+		// Make string replacements (random english word)
 		stringReplacer := strings.NewReplacer(stringFilter...)
-		// make string replacements (random word lorem ipsum)
-		route = stringReplacer.Replace(route) 
+		route = stringReplacer.Replace(route)
+		// Generic replacements: integers are more likely valid than strings
+		// as most frameworks will treat or convert integers to strings anyways...
+		re := regexp.MustCompile("(\\:[a-zA-Z0-9_]*)")
+	    route = re.ReplaceAllString(route, fake.Digits())
 	}
+
+	// Conform to starting with a "/"
+    if !strings.HasPrefix(route ,"/") {
+    	route = "/" + route
+    }
 	return route
 }
 
