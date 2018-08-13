@@ -45,6 +45,10 @@ var GlobalFlags = []cli.Flag{
 		Name: "silent, s",
 		Usage: "If this is set to true, the results will be written to a file but not to STDOUT.",
 	},
+	cli.BoolFlag{
+		Name: "test, t",
+		Usage: "If this is set to true, Commonspeak2 will execute queries against smaller, testing datasets.",
+	},
 }
 
 var Commands = []cli.Command{

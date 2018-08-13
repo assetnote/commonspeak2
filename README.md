@@ -70,6 +70,10 @@ This data can be extracted using the following command (currently not working):
 
 `⟩ ./commonspeak2 --project crunchbox-160315 --credentials credentials.json routes --frameworks nodejs,tomcat -l 100000 -o nodejs-tomcat-routes.txt`
 
+WARNING: running the above query will cost you **lots** of money (over $20 per framework). Commonspeak2 will prompt to confirm that this is OK. To skip this prompt use the `--silent` flag.
+
+We will update this repo with any wordlists generated using these options. Please keep a watch out for updates to the `/compiled` folder in this repo.
+
 **Scheduled Wordlist Generation**
 
 Planned feature to use a cron-like system to allow for wordlist generation from BigQuery to happen continuously.
