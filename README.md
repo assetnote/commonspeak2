@@ -20,7 +20,7 @@ If you're compiling or running Commonspeak2 from source:
 
 If you're using the pre-built binaries:
 
-* Download the newest release [here](/releases)
+* Download the newest release [here](https://github.com/assetnote/commonspeak2/releases)
 
 Upon completing the above steps, Commonspeak2 can be used in the following ways:
 
@@ -54,25 +54,31 @@ INFO[0013] Total rows extracted 100000.                  Mode=WordsWithExt Sourc
 Any set of extensions can be passed via the `-e` flag, i.e. `-e aspx,php,html,js`.
 
 
-### Features in active-development
+### Features in Active Development
 
 Feel free to send pull requests to complete the features below, add datasets or improve the architecture of this project. Thank you!
 
-**Routes based extraction**
+**Routes Based Extraction**
 
 We can create SQL statements that cover routing patterns in almost any web framework. For now we support the following web frameworks to extract path's from:
 
-- Rails
-- NodeJS
-- Tomcat
+- Rails  [working implementation ✅]
+- NodeJS [to be implemented ❎]
+- Tomcat [to be implemented ❎]
 
-This data can be extracted using the following command (currently not working):
+This data can be extracted using the following command:
 
-`⟩ ./commonspeak2 --project crunchbox-160315 --credentials credentials.json routes --frameworks nodejs,tomcat -l 100000 -o nodejs-tomcat-routes.txt`
+`⟩ ./commonspeak2 --project crunchbox-160315 --credentials credentials.json routes --frameworks rails -l 100000 -o rails-routes.txt`
 
 WARNING: running the above query will cost you **lots** of money (over $20 per framework). Commonspeak2 will prompt to confirm that this is OK. To skip this prompt use the `--silent` flag.
 
 We will update this repo with any wordlists generated using these options. Please keep a watch out for updates to the `/compiled` folder in this repo.
+
+When this is ran on for Rails routes, Commonspeak2 does the following:
+
+1) Pulls Rails routes from `config/routes.rb` using Regex and the latest Github dataset.
+2) Processes the data, converts it into paths and does contexual replacements to make the path valid (i.e. converting `/:id` to `/1234`)
+3) Normalizes the path, finally saving to disk after all the processing is complete.
 
 **Scheduled Wordlist Generation**
 
