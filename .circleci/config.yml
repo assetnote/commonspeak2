@@ -1,5 +1,13 @@
 version: 2
 jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.10
+    steps:
+      - checkout
+      - run: go get -u -v -t github.com/Masterminds/glide
+      - run: glide install -v
+      - run: go build
   release:
     docker:
       - image: circleci/golang:1.10
@@ -12,7 +20,7 @@ workflows:
   version: 2
   build:
     jobs:
-      - release
+      - build
   release:
     jobs:
       - release:
