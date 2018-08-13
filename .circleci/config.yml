@@ -1,4 +1,8 @@
 version: 2
+dependencies:
+  override:
+    - mkdir -p ~/.go_project/src/github.com/${CIRCLE_PROJECT_USERNAME}
+    - ln -s ${HOME}/${CIRCLE_PROJECT_REPONAME} ${HOME}/.go_project/src/github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}
 jobs:
   build:
     docker:
