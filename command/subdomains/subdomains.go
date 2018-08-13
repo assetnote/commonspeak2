@@ -57,43 +57,43 @@ func CmdStatus(c *cli.Context) error {
 	// Store generated templates in a string slice, if no
 	// source parameter is provided, the default is to
 	// run all sources available in the below switch statement
-	SQLTemplateStrings := make(map[string]string)
+	sqlTemplateStrings := make(map[string]string)
 	sourceList := strings.Split(sources, ",")
 	for _, s := range sourceList {
 		switch s {
 		case "hackernews":
-			HNSubdomainsSqlAsset, err := assets.Asset("data/sql/hackernews/subdomains.sql")
+			hnSubdomainsSqlAsset, err := assets.Asset("data/sql/hackernews/subdomains.sql")
 			if err != nil {
 				log.Debug("SQL for HackerNews not found.")
 			}
-			HNSQLString := string(HNSubdomainsSqlAsset[:])
-			HNTemplate := fasttemplate.New(HNSQLString, "{{", "}}")
+			hnSQLString := string(hnSubdomainsSqlAsset[:])
+			hnTemplate := fasttemplate.New(hnSQLString, "{{", "}}")
 			// TODO: Complete feature to extract data from the runs tables
 			// httpArchiveTablePrefix := generateTablePrefixForHA()
-			HNCompiledSql := HNTemplate.ExecuteString(map[string]interface{}{
+			hnCompiledSql := hnTemplate.ExecuteString(map[string]interface{}{
 				"limit": limitArg,
 			})
 			if verboseOpt {
-				log.WithFields(fields).Infof("Compiled SQL Template: %s", HNCompiledSql)
+				log.WithFields(fields).Infof("Compiled SQL Template: %s", hnCompiledSql)
 			}
-			SQLTemplateStrings["hackernews"] = HNCompiledSql
+			sqlTemplateStrings["hackernews"] = hnCompiledSql
 			log.WithFields(fields).Info("Generated SQL template for HackerNews.")
 		case "httparchive":
-			HASubdomainsSqlAsset, err := assets.Asset("data/sql/http-archive/subdomains.sql")
+			haSubdomainsSqlAsset, err := assets.Asset("data/sql/http-archive/subdomains.sql")
 			if err != nil {
 				log.Debug("SQL for HTTPArchive not found.")
 			}
-			HASQLString := string(HASubdomainsSqlAsset[:])
-			HATemplate := fasttemplate.New(HASQLString, "{{", "}}")
+			haSQLString := string(haSubdomainsSqlAsset[:])
+			haTemplate := fasttemplate.New(haSQLString, "{{", "}}")
 			// TODO: Complete feature to extract data from the runs tables
 			// httpArchiveTablePrefix := generateTablePrefixForHA()
-			HACompiledSql := HATemplate.ExecuteString(map[string]interface{}{
+			haCompiledSql := haTemplate.ExecuteString(map[string]interface{}{
 				"limit": limitArg,
 			})
 			if verboseOpt {
-				log.WithFields(fields).Infof("Compiled SQL Template: %s", HACompiledSql)
+				log.WithFields(fields).Infof("Compiled SQL Template: %s", haCompiledSql)
 			}
-			SQLTemplateStrings["httparchive"] = HACompiledSql
+			sqlTemplateStrings["httparchive"] = haCompiledSql
 			log.WithFields(fields).Info("Generated SQL template for HTTPArchive.")
 		}
 	}
@@ -106,7 +106,7 @@ func CmdStatus(c *cli.Context) error {
 	}
 
 	// Iterate over generated templates and obtain results
-	for source, compiledSqlValue := range SQLTemplateStrings {
+	for source, compiledSqlValue := range sqlTemplateStrings {
 		fields["Source"] = source
 		log.WithFields(fields).Info("Executing BigQuery SQL... this could take some time.")
 		rows, err := query(client, ctx, compiledSqlValue)
