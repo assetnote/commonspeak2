@@ -10,6 +10,7 @@ jobs:
       - run: glide install -v
       - run: go build
   release:
+    working_directory: /go/src/github.com/assetnote/commonspeak2
     docker:
       - image: circleci/golang:1.10
     steps:
