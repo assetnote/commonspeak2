@@ -1,11 +1,9 @@
 version: 2
 dependencies:
   override:
-    - mkdir -p "$GOPATH/src/$IMPORT_PATH"
-    - rsync -azC --delete ./ "$GOPATH/src/$IMPORT_PATH/"
-machine:
-  environment:
-    IMPORT_PATH: "github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME"
+      - rm -rf ~/.go_workspace/src/github.com/assetnote/commonspeak2
+      - mkdir -p ~/.go_workspace/src/github.com/assetnote/
+      - ln -s ~/commonspeak2 ~/.go_workspace/src/github.com/assetnote/commonspeak2
 jobs:
   build:
     docker:
