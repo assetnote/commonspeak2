@@ -1,0 +1,21 @@
+version: 2
+jobs:
+  release:
+    docker:
+      - image: circleci/golang:1.10
+    steps:
+      - checkout
+      - run: go get -u -v -t github.com/Masterminds/glide
+      - run: glide install -v
+      - run: go-bindata -pkg assets -o assets/assets.go sql/...
+      - run: curl -sL https://git.io/goreleaser | bash
+workflows:
+  version: 2
+  release:
+    jobs:
+      - release:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*(-.*)*/
