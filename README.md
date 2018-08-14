@@ -72,7 +72,7 @@ This data can be extracted using the following command:
 
 WARNING: running the above query will cost you **lots** of money (over $20 per framework). Commonspeak2 will prompt to confirm that this is OK. To skip this prompt use the `--silent` flag.
 
-We will update this repo with any wordlists generated using these options. Please keep a watch out for updates to the `/compiled` folder in this repo.
+We will update the `commonspeak2-wordlists` repo with any wordlists generated using these options. Please keep a watch out for updates over here: [https://github.com/assetnote/commonspeak2-wordlists](https://github.com/assetnote/commonspeak2-wordlists).
 
 When this is ran on for Rails routes, Commonspeak2 does the following:
 
