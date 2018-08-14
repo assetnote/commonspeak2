@@ -9,6 +9,14 @@ By using the Golang client for BigQuery, we can stream the data and process it v
 
 Let's turn creating wordlists from a manual task, into a reproducible and reliable science with BigQuery.
 
+
+I just want the wordlists...
+----
+We will update the [commonspeak2-wordlists](https://github.com/assetnote/commonspeak2-wordlists) repo with any wordlists generated the Commonspeak2 tool.
+
+More infrastructure will be developed to deliver wordlists continuously and this section will be updated in the future.
+
+
 Instructions & Usage
 ----
 
@@ -71,8 +79,6 @@ This data can be extracted using the following command:
 `⟩ ./commonspeak2 --project crunchbox-160315 --credentials credentials.json routes --frameworks rails -l 100000 -o rails-routes.txt`
 
 WARNING: running the above query will cost you **lots** of money (over $20 per framework). Commonspeak2 will prompt to confirm that this is OK. To skip this prompt use the `--silent` flag.
-
-We will update the `commonspeak2-wordlists` repo with any wordlists generated using these options. Please keep a watch out for updates over here: [https://github.com/assetnote/commonspeak2-wordlists](https://github.com/assetnote/commonspeak2-wordlists).
 
 When this is ran on for Rails routes, Commonspeak2 does the following:
 
