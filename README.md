@@ -1,6 +1,8 @@
 Commonspeak2
 ---
 
+[![CircleCI](https://circleci.com/gh/assetnote/commonspeak2.svg?style=svg)](https://circleci.com/gh/assetnote/commonspeak2)
+
 Commonspeak2 leverages publicly available datasets from Google BigQuery to generate content discovery and subdomain wordlists.
 
 As these datasets are updated on a regular basis, the wordlists generated via Commonspeak2 reflect the current technologies used on the web.
