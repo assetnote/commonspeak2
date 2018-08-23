@@ -29,8 +29,10 @@ import (
 )
 
 func CmdStatus(c *cli.Context) error {
+	deletedFilesAssetPath := "data/sql/github/deleted-files.sql"
 	verboseOpt := c.GlobalBool("verbose")
 	silentOpt := c.GlobalBool("silent")
+	testOpt := c.GlobalBool("test")
 	project := c.GlobalString("project")
 	credentials := c.GlobalString("credentials")
 	limitArg := c.String("limit")
@@ -48,8 +50,20 @@ func CmdStatus(c *cli.Context) error {
 	if project == "" {
 		log.Fatalln("project is required, provide it using the --project parameter.")
 	}
+	fields := log.Fields{
+		"Mode":   "DeletedFiles",
+		"Source": "Github",
+		"Limit":  limitArg,
+	}
 
-	deletedSqlAsset, err := assets.Asset("data/sql/github/deleted-files.sql")
+	// If test mode is enabled, let's use the testing SQL queries
+	// the testing SQL query uses `sample_commits`.
+	// This is to avoid breaking the bank!
+	if testOpt {
+		deletedFilesAssetPath = "data/sql/github/deleted-files-test.sql"
+		log.WithFields(fields).Info("Running in test mode.")
+	}
+	deletedSqlAsset, err := assets.Asset(deletedFilesAssetPath)
 	if err != nil {
 		// Asset was not found.
 	}
@@ -58,12 +72,6 @@ func CmdStatus(c *cli.Context) error {
 	compiledSql := template.ExecuteString(map[string]interface{}{
 		"limit": limitArg,
 	})
-
-	fields := log.Fields{
-		"Mode":   "DeletedFiles",
-		"Source": "Github",
-		"Limit":  limitArg,
-	}
 
 	if verboseOpt {
 		log.WithFields(fields).Infof("Compiled SQL Template: %s", compiledSql)
