@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/assetnote/commonspeak2/command/deletedfiles"
 	"github.com/assetnote/commonspeak2/command/routes"
 	"github.com/assetnote/commonspeak2/command/subdomains"
 	"github.com/assetnote/commonspeak2/command/wordswithext"
@@ -122,7 +123,7 @@ var Commands = []cli.Command{
 	{
 		Name:   "deleted-files",
 		Usage:  "Generate a list of deleted files based on GitHub commit messages.",
-		Action: routes.CmdStatus,
+		Action: deletedfiles.CmdStatus,
 		Flags: []cli.Flag{
 			cli.StringFlag{
 				Name:  "limit, l",
