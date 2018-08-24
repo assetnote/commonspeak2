@@ -18,12 +18,14 @@ package main
 
 import (
 	"fmt"
-	"github.com/urfave/cli"
-	"github.com/sirupsen/logrus"
-	"github.com/assetnote/commonspeak2/command/wordswithext"
-	"github.com/assetnote/commonspeak2/command/subdomains"
-	"github.com/assetnote/commonspeak2/command/routes"
 	"os"
+
+	"github.com/assetnote/commonspeak2/command/deletedfiles"
+	"github.com/assetnote/commonspeak2/command/routes"
+	"github.com/assetnote/commonspeak2/command/subdomains"
+	"github.com/assetnote/commonspeak2/command/wordswithext"
+	"github.com/sirupsen/logrus"
+	"github.com/urfave/cli"
 )
 
 var GlobalFlags = []cli.Flag{
@@ -33,8 +35,8 @@ var GlobalFlags = []cli.Flag{
 		Usage: "The Google Cloud Project to use for the queries.",
 	},
 	cli.StringFlag{
-		Name: "credentials, c",
-		Usage: "Refer to: https://cloud.google.com/bigquery/docs/reference/libraries#client-libraries-install-go",
+		Name:     "credentials, c",
+		Usage:    "Refer to: https://cloud.google.com/bigquery/docs/reference/libraries#client-libraries-install-go",
 		FilePath: "credentials.json",
 	},
 	cli.BoolFlag{
@@ -42,11 +44,11 @@ var GlobalFlags = []cli.Flag{
 		Usage: "Enable verbose output.",
 	},
 	cli.BoolFlag{
-		Name: "silent, s",
+		Name:  "silent, s",
 		Usage: "If this is set to true, the results will be written to a file but not to STDOUT.",
 	},
 	cli.BoolFlag{
-		Name: "test, t",
+		Name:  "test, t",
 		Usage: "If this is set to true, Commonspeak2 will execute queries against smaller, testing datasets.",
 	},
 }
@@ -63,12 +65,12 @@ var Commands = []cli.Command{
 				Usage: "Extensions to generate wordlists e.g. html,php,js",
 			},
 			cli.StringFlag{
-				Name: "limit, l",
+				Name:  "limit, l",
 				Value: "200000",
 				Usage: "Limit the wordlist to a certain number of lines. e.g. 200000",
 			},
 			cli.StringFlag{
-				Name: "output, o",
+				Name:  "output, o",
 				Value: "",
 				Usage: "Data output location e.g. wordlist.txt",
 			},
@@ -80,17 +82,17 @@ var Commands = []cli.Command{
 		Action: subdomains.CmdStatus,
 		Flags: []cli.Flag{
 			cli.StringFlag{
-				Name: "limit, l",
+				Name:  "limit, l",
 				Value: "20000000",
 				Usage: "Limit the subdomain list to a certain number of lines. e.g. 20000000",
 			},
 			cli.StringFlag{
-				Name: "output, o",
+				Name:  "output, o",
 				Value: "",
 				Usage: "Data output location e.g. subdomains.txt",
 			},
 			cli.StringFlag{
-				Name: "sources",
+				Name:  "sources",
 				Value: "hackernews,httparchive",
 				Usage: "Comma delimited sources to pull data from [hackernews,httparchive]",
 			},
@@ -107,14 +109,31 @@ var Commands = []cli.Command{
 				Usage: "Frameworks to generate wordlists for, currently limited to [rails,nodejs,tomcat]",
 			},
 			cli.StringFlag{
-				Name: "limit, l",
+				Name:  "limit, l",
 				Value: "200000",
 				Usage: "Limit the wordlist to a certain number of lines. e.g. 200000",
 			},
 			cli.StringFlag{
-				Name: "output, o",
+				Name:  "output, o",
 				Value: "",
 				Usage: "Data output location e.g. routes.txt",
+			},
+		},
+	},
+	{
+		Name:   "deleted-files",
+		Usage:  "Generate a list of deleted files based on GitHub commit messages.",
+		Action: deletedfiles.CmdStatus,
+		Flags: []cli.Flag{
+			cli.StringFlag{
+				Name:  "limit, l",
+				Value: "200000",
+				Usage: "Limit the wordlist to a certain number of lines. e.g. 200000",
+			},
+			cli.StringFlag{
+				Name:  "output, o",
+				Value: "",
+				Usage: "Data output location e.g. deleted.txt",
 			},
 		},
 	},

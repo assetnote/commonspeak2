@@ -63,6 +63,18 @@ INFO[0013] Total rows extracted 100000.                  Mode=WordsWithExt Sourc
 
 Any set of extensions can be passed via the `-e` flag, i.e. `-e aspx,php,html,js`.
 
+### Deleted files
+
+Using GitHub's commits dataset, we can extract what may be files that developers decided to delete from their public repositories. These files may contain sensitive data. This can be done with:
+
+`⟩ ./commonspeak2 --project crunchbox-160315 --credentials credentials.json deleted-files -l 50000 -o deleted.txt`
+
+
+```
+INFO[0000] Executing BigQuery SQL... this could take some time.  Limit=50000 Mode=DeletedFiles Source=Github
+INFO[0013] Total rows extracted 50000.                  Mode=DeletedFiles Source=Github
+```
+
 
 ### Features in Active Development
 
