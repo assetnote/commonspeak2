@@ -14,8 +14,8 @@ CREATE TEMPORARY FUNCTION
 OPTIONS
   ( library="gs://commonspeak-udf/URI.min.js" );
 SELECT
-  getSubdomain(origin) AS subdomain,
-  COUNT(origin) AS count
+  getSubdomain(url) AS subdomain,
+  COUNT(url) AS count
 FROM
   `httparchive.urls.*`
 GROUP BY
