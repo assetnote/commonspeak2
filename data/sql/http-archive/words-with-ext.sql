@@ -1,25 +1,26 @@
 CREATE TEMPORARY FUNCTION
-  getSubdomain(x STRING)
+  getFilename(x STRING)
   RETURNS STRING
   LANGUAGE js AS """
-  function getSubdomain(s) {
+  function getFilename(s) {
     try {
-      return URI(s).subdomain();
+      return URI(s).filename();
     } catch (ex) {
       return s;
     }
   }
-  return getSubdomain(x);
+  return getFilename(x);
 """
 OPTIONS
   ( library="gs://commonspeak-udf/URI.min.js" );
 SELECT
-  getSubdomain(url) AS subdomain,
+  getFilename(url) AS url,
   COUNT(url) AS count
 FROM
   `httparchive.requests.{{date}}_desktop`
+WHERE REGEXP_CONTAINS (url, r'({{extensions}})$')
 GROUP BY
-  subdomain
+  url
 ORDER BY
   count DESC
 LIMIT {{limit}};

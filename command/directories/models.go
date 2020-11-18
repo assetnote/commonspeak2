@@ -14,16 +14,11 @@
    limitations under the License.
 */
 
-package wordswithext
+package directories
 
 import "cloud.google.com/go/bigquery"
 
-type GithubExtPaths struct {
-	Path      bigquery.NullString `bigquery:"path"`
-	PathCount bigquery.NullInt64  `bigquery:"count"`
-}
-
-type HTTPArchiveExtPaths struct {
+type HTTPArchiveDirectories struct {
 	Url      bigquery.NullString `bigquery:"url"`
 	UrlCount bigquery.NullInt64  `bigquery:"count"`
 }

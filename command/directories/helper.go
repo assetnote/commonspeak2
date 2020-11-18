@@ -14,13 +14,12 @@
    limitations under the License.
 */
 
-package wordswithext
+package directories
 
 import (
 	"fmt"
 	"io"
 	"os"
-	"strings"
 
 	"cloud.google.com/go/bigquery"
 	"github.com/assetnote/commonspeak2/log"
@@ -48,27 +47,8 @@ func handleResults(w io.Writer, iter *bigquery.RowIterator, outputFile string, s
 	totalRows := 0
 	for {
 		switch source {
-		case "github":
-			var row GithubExtPaths
-			err := iter.Next(&row)
-			if err == iterator.Done {
-				if !silent {
-					log.WithFields(fields).Infof("Total rows extracted %d.", totalRows)
-				}
-				return nil
-			}
-			if err != nil {
-				return err
-			}
-			// Save to output file
-			fmt.Fprintf(file, "%s\n", row.Path)
-			// Print to console if verbose mode is on
-			if verbose {
-				fmt.Fprintf(w, "Path: %s Count: %s\n", row.Path, row.PathCount.String())
-			}
-			totalRows++
 		case "httparchive":
-			var row HTTPArchiveExtPaths
+			var row HTTPArchiveDirectories
 			err := iter.Next(&row)
 			if err == iterator.Done {
 				if !silent {
@@ -90,15 +70,4 @@ func handleResults(w io.Writer, iter *bigquery.RowIterator, outputFile string, s
 
 	}
 
-}
-
-func convertExtensionsToRegex(extensions string) string {
-	extList := strings.Split(extensions, ",")
-	convertedList := make([]string, 0)
-	for _, elm := range extList {
-		convertedElm := fmt.Sprintf("\\.%s", elm)
-		convertedList = append(convertedList, convertedElm)
-	}
-	finalRegex := strings.Join(convertedList, "|")
-	return finalRegex
 }

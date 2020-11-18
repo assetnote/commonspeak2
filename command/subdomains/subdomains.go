@@ -17,15 +17,18 @@
 package subdomains
 
 import (
-	"github.com/urfave/cli"
-	"github.com/assetnote/commonspeak2/assets"
-	"github.com/assetnote/commonspeak2/log"
-	"golang.org/x/net/context"
-	"github.com/valyala/fasttemplate"
-	"google.golang.org/api/option"
-	"cloud.google.com/go/bigquery"
+	"fmt"
 	"os"
 	"strings"
+	"time"
+
+	"cloud.google.com/go/bigquery"
+	"github.com/assetnote/commonspeak2/assets"
+	"github.com/assetnote/commonspeak2/log"
+	"github.com/urfave/cli"
+	"github.com/valyala/fasttemplate"
+	"golang.org/x/net/context"
+	"google.golang.org/api/option"
 )
 
 func CmdStatus(c *cli.Context) error {
@@ -35,6 +38,7 @@ func CmdStatus(c *cli.Context) error {
 	credentials := c.GlobalString("credentials")
 	limitArg := c.String("limit")
 	sources := c.String("sources")
+	date := c.String("date")
 	outputFile := c.String("output")
 
 	if _, err := os.Stat(credentials); os.IsNotExist(err) {
@@ -49,9 +53,9 @@ func CmdStatus(c *cli.Context) error {
 	if project == "" {
 		log.Fatalln("project is required, provide it using the --project parameter.")
 	}
-	
+
 	fields := log.Fields{
-		"Mode":       "Subdomains",
+		"Mode": "Subdomains",
 	}
 
 	// Store generated templates in a string slice, if no
@@ -85,10 +89,17 @@ func CmdStatus(c *cli.Context) error {
 			}
 			haSQLString := string(haSubdomainsSqlAsset[:])
 			haTemplate := fasttemplate.New(haSQLString, "{{", "}}")
+			currentTime := time.Now()
+			haDate := currentTime.Format("2006_01")
+			firstHaDate := fmt.Sprintf("%s_01", haDate)
+			if date != "" {
+				firstHaDate = date
+			}
 			// TODO: Complete feature to extract data from the runs tables
 			// httpArchiveTablePrefix := generateTablePrefixForHA()
 			haCompiledSql := haTemplate.ExecuteString(map[string]interface{}{
 				"limit": limitArg,
+				"date":  firstHaDate,
 			})
 			if verboseOpt {
 				log.WithFields(fields).Infof("Compiled SQL Template: %s", haCompiledSql)
@@ -110,20 +121,19 @@ func CmdStatus(c *cli.Context) error {
 		fields["Source"] = source
 		log.WithFields(fields).Info("Executing BigQuery SQL... this could take some time.")
 		rows, err := query(client, ctx, compiledSqlValue)
-		
+
 		if err != nil {
 			fields["Error"] = err.Error()
 			log.WithFields(fields).Fatal("Error executing BigQuery SQL.")
 		}
-		
+
 		resultsErr := handleResults(os.Stdout, rows, outputFile, source, silentOpt, verboseOpt)
-		
+
 		if resultsErr != nil {
 			fields["Error"] = resultsErr.Error()
 			log.WithFields(fields).Fatal("Error handling results.")
 		}
 	}
-
 
 	return nil
 }

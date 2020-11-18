@@ -65,6 +65,8 @@ Any set of extensions can be passed via the `-e` flag, i.e. `-e aspx,php,html,js
 
 ### Deleted files
 
+*Contributed by [mhmdiaa](https://twitter.com/mhmdiaa)*
+
 Using GitHub's commits dataset, we can extract what may be files that developers decided to delete from their public repositories. These files may contain sensitive data. This can be done with:
 
 `⟩ ./commonspeak2 --project crunchbox-160315 --credentials credentials.json deleted-files -l 50000 -o deleted.txt`

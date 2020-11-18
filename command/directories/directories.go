@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-package wordswithext
+package directories
 
 import (
 	"fmt"
@@ -36,7 +36,6 @@ func CmdStatus(c *cli.Context) error {
 	silentOpt := c.GlobalBool("silent")
 	project := c.GlobalString("project")
 	credentials := c.GlobalString("credentials")
-	extensions := c.String("extensions")
 	limitArg := c.String("limit")
 	outputFile := c.String("output")
 	sources := c.String("sources")
@@ -55,48 +54,20 @@ func CmdStatus(c *cli.Context) error {
 		log.Fatalln("project is required, provide it using the --project parameter.")
 	}
 
-	if extensions == "" {
-		log.Fatalln("extensions are required, provide it using the -e parameter.")
-	}
 	fields := log.Fields{
-		"Mode": "WordsWithExt",
+		"Mode": "Directories",
 	}
-	extensionsRegex := convertExtensionsToRegex(extensions)
 	sourceList := strings.Split(sources, ",")
 	sqlTemplateStrings := make(map[string]string)
 	for _, s := range sourceList {
 		switch s {
-		case "github":
-			ghWordsSqlAsset, err := assets.Asset("data/sql/github/words-with-ext.sql")
-			if err != nil {
-				// Asset was not found.
-			}
-			ghWordsTemplate := string(ghWordsSqlAsset[:])
-			ghTemplate := fasttemplate.New(ghWordsTemplate, "{{", "}}")
-			ghCompiledSql := ghTemplate.ExecuteString(map[string]interface{}{
-				"extensions": extensionsRegex,
-				"limit":      limitArg,
-			})
-
-			fields := log.Fields{
-				"Mode":       "WordsWithExt",
-				"Source":     "Github",
-				"Limit":      limitArg,
-				"Extensions": extensions,
-			}
-
-			if verboseOpt {
-				log.WithFields(fields).Infof("Compiled SQL Template: %s", ghCompiledSql)
-			}
-			sqlTemplateStrings["github"] = ghCompiledSql
-			log.WithFields(fields).Info("Generated SQL template for Github.")
 		case "httparchive":
-			haWordsSqlAsset, err := assets.Asset("data/sql/http-archive/words-with-ext.sql")
+			haDirsSqlAsset, err := assets.Asset("data/sql/http-archive/directories.sql")
 			if err != nil {
 				// Asset was not found.
 			}
-			haWordsTemplate := string(haWordsSqlAsset[:])
-			haTemplate := fasttemplate.New(haWordsTemplate, "{{", "}}")
+			haDirsTemplate := string(haDirsSqlAsset[:])
+			haTemplate := fasttemplate.New(haDirsTemplate, "{{", "}}")
 			currentTime := time.Now()
 			haDate := currentTime.Format("2006_01")
 			firstHaDate := fmt.Sprintf("%s_01", haDate)
@@ -104,16 +75,14 @@ func CmdStatus(c *cli.Context) error {
 				firstHaDate = date
 			}
 			haCompiledSql := haTemplate.ExecuteString(map[string]interface{}{
-				"extensions": extensionsRegex,
-				"limit":      limitArg,
-				"date":       firstHaDate,
+				"limit": limitArg,
+				"date":  firstHaDate,
 			})
 
 			fields := log.Fields{
-				"Mode":       "WordsWithExt",
-				"Source":     "HTTPArchive",
-				"Limit":      limitArg,
-				"Extensions": extensions,
+				"Mode":   "Directories",
+				"Source": "HTTPArchive",
+				"Limit":  limitArg,
 			}
 
 			if verboseOpt {

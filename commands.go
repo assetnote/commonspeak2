@@ -21,8 +21,10 @@ import (
 	"os"
 
 	"github.com/assetnote/commonspeak2/command/deletedfiles"
+	"github.com/assetnote/commonspeak2/command/directories"
 	"github.com/assetnote/commonspeak2/command/routes"
 	"github.com/assetnote/commonspeak2/command/subdomains"
+	"github.com/assetnote/commonspeak2/command/technologies"
 	"github.com/assetnote/commonspeak2/command/wordswithext"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
@@ -74,6 +76,43 @@ var Commands = []cli.Command{
 				Value: "",
 				Usage: "Data output location e.g. wordlist.txt",
 			},
+			cli.StringFlag{
+				Name:  "sources",
+				Value: "github,httparchive",
+				Usage: "Comma delimited sources to pull data from [github,httparchive]",
+			},
+			cli.StringFlag{
+				Name:  "date",
+				Value: "",
+				Usage: "Date to use for HTTPArchive",
+			},
+		},
+	},
+	{
+		Name:   "directories",
+		Usage:  "Generate directory wordlists using URI.js and BigQuery",
+		Action: directories.CmdStatus,
+		Flags: []cli.Flag{
+			cli.StringFlag{
+				Name:  "limit, l",
+				Value: "200000",
+				Usage: "Limit the wordlist to a certain number of lines. e.g. 200000",
+			},
+			cli.StringFlag{
+				Name:  "output, o",
+				Value: "",
+				Usage: "Data output location e.g. wordlist.txt",
+			},
+			cli.StringFlag{
+				Name:  "sources",
+				Value: "httparchive",
+				Usage: "Comma delimited sources to pull data from [httparchive]",
+			},
+			cli.StringFlag{
+				Name:  "date",
+				Value: "",
+				Usage: "Date to use for HTTPArchive",
+			},
 		},
 	},
 	{
@@ -95,6 +134,38 @@ var Commands = []cli.Command{
 				Name:  "sources",
 				Value: "hackernews,httparchive",
 				Usage: "Comma delimited sources to pull data from [hackernews,httparchive]",
+			},
+			cli.StringFlag{
+				Name:  "date",
+				Value: "",
+				Usage: "Date to use for HTTPArchive",
+			},
+		},
+	},
+	{
+		Name:   "technologies",
+		Usage:  "Generates a list of assets that have a specific technology from the HTTPArchive dataset.",
+		Action: technologies.CmdStatus,
+		Flags: []cli.Flag{
+			cli.StringFlag{
+				Name:  "limit, l",
+				Value: "20000000",
+				Usage: "Limit the asset list to a certain number of lines. e.g. 20000000",
+			},
+			cli.StringFlag{
+				Name:  "output, o",
+				Value: "",
+				Usage: "Data output location e.g. technologies.txt",
+			},
+			cli.StringFlag{
+				Name:  "technology",
+				Value: "Adobe Experience Manaager",
+				Usage: "Technology you wish to retrieve assets for.",
+			},
+			cli.StringFlag{
+				Name:  "date",
+				Value: "",
+				Usage: "Date to use for HTTPArchive",
 			},
 		},
 	},
