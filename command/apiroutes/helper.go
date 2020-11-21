@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-package directories
+package apiroutes
 
 import (
 	"fmt"
@@ -34,7 +34,7 @@ func query(client *bigquery.Client, ctx context.Context, compiledSql string) (*b
 
 func handleResults(w io.Writer, iter *bigquery.RowIterator, outputFile string, source string, silent bool, verbose bool) error {
 	fields := log.Fields{
-		"Mode":   "Directories",
+		"Mode":   "APIRoutes",
 		"Source": source,
 	}
 	file, err := os.Create(outputFile)
@@ -48,7 +48,7 @@ func handleResults(w io.Writer, iter *bigquery.RowIterator, outputFile string, s
 	for {
 		switch source {
 		case "httparchive":
-			var row HTTPArchiveDirectories
+			var row HTTPArchiveAPIRoutes
 			err := iter.Next(&row)
 			if err == iterator.Done {
 				if !silent {
@@ -60,10 +60,10 @@ func handleResults(w io.Writer, iter *bigquery.RowIterator, outputFile string, s
 				return err
 			}
 			// Save to output file
-			fmt.Fprintf(file, "%s\n", row.Url)
+			fmt.Fprintf(file, "%s\n", row.Fullpath)
 			// Print to console if verbose mode is on
 			if verbose {
-				fmt.Fprintf(w, "Path: %s Count: %s\n", row.Url, row.UrlCount.String())
+				fmt.Fprintf(w, "Path: %s Count: %s\n", row.Fullpath, row.UrlCount.String())
 			}
 			totalRows++
 		}
