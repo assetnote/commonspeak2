@@ -23,6 +23,7 @@ import (
 	"github.com/assetnote/commonspeak2/command/apiroutes"
 	"github.com/assetnote/commonspeak2/command/deletedfiles"
 	"github.com/assetnote/commonspeak2/command/directories"
+	"github.com/assetnote/commonspeak2/command/parameters"
 	"github.com/assetnote/commonspeak2/command/routes"
 	"github.com/assetnote/commonspeak2/command/subdomains"
 	"github.com/assetnote/commonspeak2/command/technologies"
@@ -120,6 +121,33 @@ var Commands = []cli.Command{
 		Name:   "apiroutes",
 		Usage:  "Generate API routes wordlists using URI.js and BigQuery",
 		Action: apiroutes.CmdStatus,
+		Flags: []cli.Flag{
+			cli.StringFlag{
+				Name:  "limit, l",
+				Value: "200000",
+				Usage: "Limit the wordlist to a certain number of lines. e.g. 200000",
+			},
+			cli.StringFlag{
+				Name:  "output, o",
+				Value: "",
+				Usage: "Data output location e.g. wordlist.txt",
+			},
+			cli.StringFlag{
+				Name:  "sources",
+				Value: "httparchive",
+				Usage: "Comma delimited sources to pull data from [httparchive]",
+			},
+			cli.StringFlag{
+				Name:  "date",
+				Value: "",
+				Usage: "Date to use for HTTPArchive",
+			},
+		},
+	},
+	{
+		Name:   "parameters",
+		Usage:  "Generate GET parameters wordlists using URI.js and BigQuery",
+		Action: parameters.CmdStatus,
 		Flags: []cli.Flag{
 			cli.StringFlag{
 				Name:  "limit, l",
