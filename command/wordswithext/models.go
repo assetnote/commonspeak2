@@ -24,6 +24,6 @@ type GithubExtPaths struct {
 }
 
 type HTTPArchiveExtPaths struct {
-	Url      bigquery.NullString `bigquery:"url"`
-	UrlCount bigquery.NullInt64  `bigquery:"count"`
+	Path      bigquery.NullString `bigquery:"url"`
+	PathCount bigquery.NullInt64  `bigquery:"count"`
 }

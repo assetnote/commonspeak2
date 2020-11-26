@@ -17,13 +17,15 @@
 package subdomains
 
 import (
-	"github.com/assetnote/commonspeak2/log"
-	"cloud.google.com/go/bigquery"
-	"google.golang.org/api/iterator"
-	"golang.org/x/net/context"
+	"fmt"
 	"io"
 	"os"
-	"fmt"
+
+	"cloud.google.com/go/bigquery"
+	"github.com/assetnote/commonspeak2/log"
+	"github.com/assetnote/commonspeak2/noisey"
+	"golang.org/x/net/context"
+	"google.golang.org/api/iterator"
 	// "time"
 )
 
@@ -32,22 +34,21 @@ func query(client *bigquery.Client, ctx context.Context, compiledSql string) (*b
 	return query.Read(ctx)
 }
 
-
 func handleResults(w io.Writer, iter *bigquery.RowIterator, outputFile string, source string, silent bool, verbose bool) error {
 	fields := log.Fields{
-		"Mode":       "Subdomains",
-		"Source":	  source,
-		"Silent":	  silent,
-		"Verbose":	  verbose,
+		"Mode":    "Subdomains",
+		"Source":  source,
+		"Silent":  silent,
+		"Verbose": verbose,
 	}
 	file, err := os.Create(outputFile)
-    if err != nil {
-    	fields["Filename"] = outputFile
-    	fields["Error"] = err.Error()
-        log.WithFields(fields).Fatal("Cannot create output file")
-    }
-    defer file.Close()
-    totalRows := 0
+	if err != nil {
+		fields["Filename"] = outputFile
+		fields["Error"] = err.Error()
+		log.WithFields(fields).Fatal("Cannot create output file")
+	}
+	defer file.Close()
+	totalRows := 0
 	for {
 		var row SubdomainNames
 		err := iter.Next(&row)
@@ -60,13 +61,17 @@ func handleResults(w io.Writer, iter *bigquery.RowIterator, outputFile string, s
 		if err != nil {
 			return err
 		}
-		// Save to output file
-		fmt.Fprintf(file, "%s\n", row.Subdomain)
-		// Print to console if verbose mode is on
-		if verbose {
-			fmt.Fprintf(w, "Subdomain: %s Count: %s\n", row.Subdomain, row.SubdomainCount.String())
+		// dont save if its an MD5,SHA1,SHA256,SHA512 hash or other noise
+		if noisey.IsNotNoisey(row.Subdomain.String()) {
+			// Save to output file
+			fmt.Fprintf(file, "%s\n", row.Subdomain)
+			// Print to console if verbose mode is on
+			if verbose {
+				fmt.Fprintf(w, "Subdomain: %s Count: %s\n", row.Subdomain, row.SubdomainCount.String())
+			}
+			totalRows++
 		}
-		totalRows++
+
 	}
 }
 

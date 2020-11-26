@@ -20,11 +20,11 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"regexp"
 	"strings"
 
 	"cloud.google.com/go/bigquery"
 	"github.com/assetnote/commonspeak2/log"
+	"github.com/assetnote/commonspeak2/noisey"
 	"golang.org/x/net/context"
 	"google.golang.org/api/iterator"
 )
@@ -61,20 +61,17 @@ func handleResults(w io.Writer, iter *bigquery.RowIterator, outputFile string, s
 			if err != nil {
 				return err
 			}
-			isMD5, _ := regexp.MatchString("^[0-9a-fA-F]{32}$", row.Parameter.String())
-			isSHA1, _ := regexp.MatchString("^[a-fA-F0-9]{40}$", row.Parameter.String())
-			isSHA256, _ := regexp.MatchString("^[A-Fa-f0-9]{64}$", row.Parameter.String())
-			isSHA512, _ := regexp.MatchString("^[A-Fa-f0-9]{128}$", row.Parameter.String())
-			// dont save if theres a "/" or a " " in the param or if its an MD5,SHA1,SHA256,SHA512 hash
-			if !strings.Contains(row.Parameter.String(), "/") && !strings.Contains(row.Parameter.String(), " ") && !isMD5 && !isSHA1 && !isSHA256 && !isSHA512 {
+			// dont save if theres a "/" or a " " in the param or if its an MD5,SHA1,SHA256,SHA512 hash or other noise
+			if !strings.Contains(row.Parameter.String(), "/") && !strings.Contains(row.Parameter.String(), " ") && noisey.IsNotNoisey(row.Parameter.String()) {
 				// Save to output file
 				fmt.Fprintf(file, "%s\n", row.Parameter)
 				// Print to console if verbose mode is on
 				if verbose {
 					fmt.Fprintf(w, "Parameter: %s Count: %s\n", row.Parameter, row.ParamCount.String())
 				}
+				totalRows++
 			}
-			totalRows++
+
 		}
 
 	}

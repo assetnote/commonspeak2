@@ -24,6 +24,7 @@ import (
 
 	"cloud.google.com/go/bigquery"
 	"github.com/assetnote/commonspeak2/log"
+	"github.com/assetnote/commonspeak2/noisey"
 	"golang.org/x/net/context"
 	"google.golang.org/api/iterator"
 )
@@ -60,11 +61,14 @@ func handleResults(w io.Writer, iter *bigquery.RowIterator, outputFile string, s
 			if err != nil {
 				return err
 			}
-			// Save to output file
-			fmt.Fprintf(file, "%s\n", row.Path)
-			// Print to console if verbose mode is on
-			if verbose {
-				fmt.Fprintf(w, "Path: %s Count: %s\n", row.Path, row.PathCount.String())
+			// dont save if its an MD5,SHA1,SHA256,SHA512 hash or other noise
+			if noisey.IsNotNoisey(row.Path.String()) {
+				// Save to output file
+				fmt.Fprintf(file, "%s\n", row.Path)
+				// Print to console if verbose mode is on
+				if verbose {
+					fmt.Fprintf(w, "Path: %s Count: %s\n", row.Path, row.PathCount.String())
+				}
 			}
 			totalRows++
 		case "httparchive":
@@ -79,13 +83,17 @@ func handleResults(w io.Writer, iter *bigquery.RowIterator, outputFile string, s
 			if err != nil {
 				return err
 			}
-			// Save to output file
-			fmt.Fprintf(file, "%s\n", row.Url)
-			// Print to console if verbose mode is on
-			if verbose {
-				fmt.Fprintf(w, "Path: %s Count: %s\n", row.Url, row.UrlCount.String())
+			// dont save if its an MD5,SHA1,SHA256,SHA512 hash or other noise
+			if noisey.IsNotNoisey(row.Path.String()) {
+				// Save to output file
+				fmt.Fprintf(file, "%s\n", row.Path)
+				// Print to console if verbose mode is on
+				if verbose {
+					fmt.Fprintf(w, "Path: %s Count: %s\n", row.Path, row.PathCount.String())
+				}
+				totalRows++
 			}
-			totalRows++
+
 		}
 
 	}
