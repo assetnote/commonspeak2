@@ -1,8 +1,6 @@
 Commonspeak2
 ---
 
-[![CircleCI](https://circleci.com/gh/assetnote/commonspeak2.svg?style=svg)](https://circleci.com/gh/assetnote/commonspeak2)
-
 Commonspeak2 leverages publicly available datasets from Google BigQuery to generate content discovery and subdomain wordlists.
 
 As these datasets are updated on a regular basis, the wordlists generated via Commonspeak2 reflect the current technologies used on the web.
@@ -14,7 +12,7 @@ Let's turn creating wordlists from a manual task, into a reproducible and reliab
 
 I just want the wordlists...
 ----
-We will update [wordlists.assetnote.io](https://github.com/assetnote/wordlists) website with any wordlists generated the Commonspeak2 tool.
+We will update [wordlists.assetnote.io](https://wordlists.assetnote.io) website with any wordlists generated the Commonspeak2 tool.
 
 Wordlists are automatically generated at the end of each month and uploaded to this site. Further details here: https://github.com/assetnote/wordlists
 
