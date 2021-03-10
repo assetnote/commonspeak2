@@ -14,9 +14,9 @@ Let's turn creating wordlists from a manual task, into a reproducible and reliab
 
 I just want the wordlists...
 ----
-We will update the [commonspeak2-wordlists](https://github.com/assetnote/commonspeak2-wordlists) repo with any wordlists generated the Commonspeak2 tool.
+We will update [wordlists.assetnote.io](https://github.com/assetnote/wordlists) website with any wordlists generated the Commonspeak2 tool.
 
-More infrastructure will be developed to deliver wordlists continuously and this section will be updated in the future.
+Wordlists are automatically generated at the end of each month and uploaded to this site. Further details here: https://github.com/assetnote/wordlists
 
 
 Instructions & Usage
