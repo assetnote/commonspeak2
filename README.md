@@ -97,7 +97,7 @@ WARNING: running the above query will cost you **lots** of money (over $20 per f
 When this is ran on for Rails routes, Commonspeak2 does the following:
 
 1) Pulls Rails routes from `config/routes.rb` using Regex and the latest Github dataset.
-2) Processes the data, converts it into paths and does contexual replacements to make the path valid (i.e. converting `/:id` to `/1234`)
+2) Processes the data, converts it into paths and does contextual replacements to make the path valid (i.e. converting `/:id` to `/1234`)
 3) Normalizes the path, finally saving to disk after all the processing is complete.
 
 **Scheduled Wordlist Generation**
