@@ -1,4 +1,4 @@
-package: commonspeak2
+package: .
 import:
   - package: "github.com/urfave/cli"
   - package: "github.com/valyala/fasttemplate"
