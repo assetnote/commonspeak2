@@ -24,6 +24,7 @@ import (
 	"github.com/assetnote/commonspeak2/command/deletedfiles"
 	"github.com/assetnote/commonspeak2/command/directories"
 	"github.com/assetnote/commonspeak2/command/parameters"
+	"github.com/assetnote/commonspeak2/command/pathswithbody"
 	"github.com/assetnote/commonspeak2/command/routes"
 	"github.com/assetnote/commonspeak2/command/subdomains"
 	"github.com/assetnote/commonspeak2/command/technologies"
@@ -72,6 +73,43 @@ var Commands = []cli.Command{
 				Name:  "limit, l",
 				Value: "200000",
 				Usage: "Limit the wordlist to a certain number of lines. e.g. 200000",
+			},
+			cli.StringFlag{
+				Name:  "output, o",
+				Value: "",
+				Usage: "Data output location e.g. wordlist.txt",
+			},
+			cli.StringFlag{
+				Name:  "sources",
+				Value: "github,httparchive",
+				Usage: "Comma delimited sources to pull data from [github,httparchive]",
+			},
+			cli.StringFlag{
+				Name:  "date",
+				Value: "",
+				Usage: "Date to use for HTTPArchive",
+			},
+		},
+	},
+	{
+		Name:   "body-wordlist",
+		Usage:  "Generate path wordlists based on a regex provided by the user on http response body.",
+		Action: pathswithbody.CmdStatus,
+		Flags: []cli.Flag{
+			cli.StringFlag{
+				Name:  "regex, r",
+				Value: "",
+				Usage: "Regular expression that matches on the HTTP response body. Use single quotes to ensure special characters are interpreted correctly",
+			},
+			cli.StringFlag{
+				Name:  "limit, l",
+				Value: "200000",
+				Usage: "Limit the wordlist to a certain number of lines. e.g. 200000",
+			},
+			cli.Float64Flag{
+				Name:  "sample-rate, s",
+				Value: 100.0,
+				Usage: "The percentage of the dataset to run the query on. Content matching on large dataset can be expensive",
 			},
 			cli.StringFlag{
 				Name:  "output, o",
