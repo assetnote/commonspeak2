@@ -114,6 +114,15 @@ The above query will run a weekly BigQuery and save the output to `./nodejs-tomc
 
 Generate smart substitutions and alterations for the datasets that it makes sense for. For example, converting string values from `/admin/users/:id` to `/admin/users/1234` (contextually aware of the number).
 
+## Building commonspeak2 package
+
+The module uses glide for package manager. Note that more recent versions of golang use go mod so you will have to take this into account.
+
+- Clone this repository in the following local folder: ```$GOPATH/src/github.com/assetnote/commonspeak2```
+- When making any changes to the data/ folder, regenerate the files using https://github.com/go-bindata/go-bindata by running ```go-bindata -o assets/assets.go -pkg assets data/... ```
+- Update dependencies using ```glide up```. Make sure you run this after running go-bindata
+- run ```go build``` and commonspeak2 executable should be created
+
 Credits
 ----
 
